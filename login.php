@@ -37,9 +37,14 @@ if (isset($_POST['login'])) {
                     $_SESSION['user_id'] = $user['fld_id_pengguna'];
                     $_SESSION['user_name'] = $user['fld_nama'];
                     $_SESSION['user_level'] = $user['fld_userlevel'];
-
-                    header("Location: dashboard_user.php");
+                
+                    if ($user['fld_userlevel'] === 'Pengurusan') {
+                        header("Location: dashboard_admin.php");
+                    } else {
+                        header("Location: dashboard_pengguna.php");
+                    }
                     exit();
+                
                 } else {
                     $error = "Emel atau kata laluan tidak sah. Sila cuba lagi!";
                 }
@@ -118,8 +123,8 @@ if (isset($_POST['login'])) {
 </head>
 <body>
     <div class="header-bar">
-        <img src="logo.jpg" alt="Logo">
-        CONDO CARE
+        <img src="logo.jpg" alt="Logo">CONDO CARE
+        
     </div>
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="login-container">

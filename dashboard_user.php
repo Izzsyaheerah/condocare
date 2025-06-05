@@ -18,90 +18,41 @@ if (!isset($_SESSION['user_id'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color:rgb(222, 218, 200);
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: rgb(222, 218, 200);
+        margin: 0;
+        padding: 0;
+        display: flex;
+    }
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background-color: #073B3A;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    /* Content */
+    .content {
+        margin-left: 260px;
+        padding: 20px;
+        flex: 1;
+        width: 100%;
+    }
 
-        .sidebar h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    /* Navigation Bar */
+    .navbar {
+        background-color: #D27D2C;
+        padding: 15px;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: background 0.3s ease-in-out;
-        }
+    .navbar img {
+        height: 40px;
+        margin-right: 10px;
+    }
 
-        .sidebar a:hover {
-            background-color: #D27D2C;
-        }
+</style>
 
-        /* Content */
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-            flex: 1;
-            width: 100%;
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: #D27D2C;
-            padding: 15px;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        /* Logout Button */
-        .logout-btn {
-            background: #D27D2C;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .logout-btn:hover {
-            background: darkred;
-        }
-
-    </style>
 </head>
 <body>
 
@@ -115,7 +66,7 @@ if (!isset($_SESSION['user_id'])) {
                 <p>Selamat datang Pengguna, <strong><?php echo $_SESSION['user_name']; ?></strong>!</p>
             </div>-->
 
-            <?php include('./pengguna/dashboard_pengguna.php'); ?>
+            <?php include('dashboard_pengguna.php'); ?>
         <?php } ?>
 
 
@@ -125,7 +76,7 @@ if (!isset($_SESSION['user_id'])) {
                 <p>Selamat datang Pengurusan, <strong><?php echo $_SESSION['user_name']; ?></strong>!</p>
             </div> -->
 
-            <?php include('./admin/dashboard_admin.php'); ?>
+            <?php include('dashboard_admin.php'); ?>
         <?php } ?>
         
       

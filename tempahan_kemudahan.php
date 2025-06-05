@@ -23,57 +23,6 @@ if (!isset($_SESSION['user_id'])) {
             background-color: rgb(222, 218, 200);
             display: flex;
         }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background-color: #073B3A;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .sidebar img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: background 0.3s ease-in-out;
-        }
-
-        .sidebar a:hover {
-            background-color: #D27D2C;
-        }
-
-        .logout-btn {
-            background: #D27D2C;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .logout-btn:hover {
-            background: darkred;
-        }
-
         /* Main Content */
         .content {
             margin-left: 270px;
@@ -132,8 +81,12 @@ if (!isset($_SESSION['user_id'])) {
                     <input type="text" id="no_unit" name="no_unit" class="form-control" required>
                 </div>
                 <div class="mb-3">
+                    <label for="nama_penempah" class="form-label">Nama Penempah :</label>
+                    <input type="text" id="nama_penempah" name="nama_penempah" class="form-control" required>
+                </div>
+                <div class="mb-3">
                     <label for="hubungi" class="form-label">No Tel :</label>
-                    <input type="text" id="hubungi" name="hubungi" class="form-control" required>
+                    <input type="text" id="hubungi" name="no_tel" maxlength="11" pattern="\d{10,11}" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="tarikh_tempahan" class="form-label">Tarikh Tempahan :</label>

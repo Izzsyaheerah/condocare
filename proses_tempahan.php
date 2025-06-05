@@ -8,17 +8,35 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-
 // Ambil data dari borang
 $fld_id_pengguna = $_SESSION['user_id'];
 $kemudahan = $_POST['kemudahan'];
 $fld_no_unit = $_POST['no_unit'];
-$no_tel = $_POST['no_tel'];
+$nama_penempah = $_POST['nama_penempah'];
+$no_tel = $_POST['no_tel']; 
+if (!preg_match('/^\d{1,11}$/', $no_tel)) {
+    echo "<script>alert('Sila masukkan nombor telefon yang sah.'); window.history.back();</script>";
+    exit();
+}
 $masa_slot = $_POST['masa_tempahan']; // Contoh: "07:00-14:00"
 $tarikh_tempahan = $_POST['tarikh_tempahan'];
 
+// Semak tarikh tempahan dengan tarikh semasa
+$current_date = date('Y-m-d'); // Tarikh semasa dalam format YYYY-MM-DD
+
+if ($tarikh_tempahan < $current_date) {
+    echo "<script>alert('Tarikh tempahan telah lepas. Sila pilih tarikh yang akan datang.'); window.history.back();</script>";
+    exit();
+}
+
 // Pisahkan masa mula dan tamat
 list($masa_mula, $masa_tamat) = explode('-', $masa_slot);
+
+// Semakan nombor telefon: mestilah digit sahaja dan maksimum 11 angka
+if (!preg_match('/^\d{1,11}$/', $no_tel)) {
+    echo "<script>alert('Sila masukkan nombor telefon yang sah.'); window.history.back();</script>";
+    exit();
+}
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -46,20 +64,21 @@ try {
 
     // Simpan tempahan baru
     $stmt = $conn->prepare("INSERT INTO tbl_tempahan 
-        (fld_id_pengguna, kemudahan, fld_no_unit, no_tel, masa_mula, masa_tamat, tarikh_tempahan) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)");
+         (fld_id_pengguna, kemudahan, fld_no_unit, nama_penempah, no_tel, masa_mula, masa_tamat, tarikh_tempahan) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->execute([
         $fld_id_pengguna,
         $kemudahan,
         $fld_no_unit,
+        $nama_penempah,
         $no_tel,
         $masa_mula,
         $masa_tamat,
         $tarikh_tempahan
     ]);
 
-    echo "<script>alert('Tempahan berjaya dihantar!'); window.location.href='dashboard_user.php';</script>";
+    echo "<script>alert('Tempahan berjaya dihantar! Sila ke Pejabat untuk mengambil kunci.'); window.location.href='senarai_tempahan.php';</script>";
 
 } catch (PDOException $e) {
     echo "Ralat: " . $e->getMessage();

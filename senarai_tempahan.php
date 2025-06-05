@@ -28,61 +28,13 @@ $tempahan = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Tempahan Kemudahan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: rgb(222, 218, 200);
             display: flex;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background-color: #073B3A;
-            color: white;
-            padding: 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .sidebar img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: background 0.3s ease-in-out;
-        }
-
-        .sidebar a:hover {
-            background-color: #D27D2C;
-        }
-
-        .logout-btn {
-            background: #D27D2C;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .logout-btn:hover {
-            background: darkred;
         }
 
         /* Main Content */
@@ -131,9 +83,12 @@ $tempahan = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <th>No</th>
                     <th>Kemudahan</th>
                     <th>No Unit</th>
+                    <th>Nama Penempah</th>
                     <th>No Tel</th>
-                    <th>Masa Tempahan</th>
+                    <th>Masa Mula</th>
+                    <th>Masa Tamat</th>
                     <th>Tarikh Tempahan</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -143,9 +98,15 @@ $tempahan = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td class="text-center"><?= $i++ ?></td>
                             <td><?= htmlspecialchars($row['kemudahan']) ?></td>
                             <td><?= htmlspecialchars($row['fld_no_unit']) ?></td>
+                            <td><?= htmlspecialchars($row['nama_penempah']) ?></td>
                             <td><?= htmlspecialchars($row['no_tel']) ?></td>
-                            <td><?= date('h:i A', strtotime($row['tarikh_masa_hantar'])) ?></td>
+                            <td><?= date('h:i A', strtotime($row['masa_mula'])) ?></td>
+                            <td><?= date('h:i A', strtotime($row['masa_tamat'])) ?></td>
                             <td><?= date('d/m/Y', strtotime($row['tarikh_tempahan'])) ?></td>
+                            <td><a href="padam_tempahan.php?id=<?= $row['id_tempahan'] ?>" onclick="return confirm('Adakah anda pasti ingin batalkan tempahan ini?')" class="text-danger ms-2">
+        <i class="fas fa-trash-alt"></i>
+    </a>
+</td>
                         </tr>
                     <?php endforeach ?>
                 <?php else: ?>

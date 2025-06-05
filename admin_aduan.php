@@ -8,16 +8,19 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$id_pengguna = $_SESSION['user_id']; // Ambil id pengguna dari sesi login
-
 // Sambung ke database
 $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Dapatkan semua aduan pengguna
+// Mendapatkan nilai search dari parameter URL
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Dapatkan semua data dalam tbl_aduan berdasarkan kata kunci pencarian
 try {
-    $stmt = $conn->prepare("SELECT * FROM tbl_aduan WHERE fld_id_pengguna = ? ORDER BY tarikh_aduan DESC");
-    $stmt->execute([$id_pengguna]);
+    $query = "SELECT * FROM tbl_aduan WHERE tajuk LIKE :search OR penerangan LIKE :search ORDER BY tarikh_aduan DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bindValue(':search', "%$search%");
+    $stmt->execute();
     $aduan = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "Ralat: " . $e->getMessage();
@@ -29,10 +32,9 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Senarai Aduan</title>
+    <title>Admin - Senarai Aduan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -55,29 +57,63 @@ try {
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-tambah {
+        .btn-kemaskini {
             background-color: #D27D2C;
             color: white;
             font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .btn-tambah:hover {
+        .btn-kemaskini:hover {
+            background-color: #A65F20;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            background-color: #D27D2C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
             background-color: #A65F20;
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
     <?php include 'sidebar.php'; ?>
 
-    <!-- Main Content -->
     <div class="content">
         <div class="container">
             <h3 class="mb-4">Senarai Aduan</h3>
-            <div class="text-end mb-3">
-                <a href="aduan.php" class="btn btn-tambah">Tambah Aduan</a>
-            </div>
+
+            <!-- Form Pencarian -->
+            <form method="GET" class="search-bar">
+                <input type="text" class="form-control" name="search" placeholder="Cari Aduan, No Unit..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" />
+                <button type="submit">Cari</button>
+            </form>
 
             <table class="table table-bordered">
                 <thead>
@@ -90,7 +126,6 @@ try {
                         <th>Penerangan</th>
                         <th>Lampiran</th>
                         <th>Status Tindakan</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,18 +139,22 @@ try {
                                 <td><?= htmlspecialchars($row['tajuk']) ?></td>
                                 <td><?= htmlspecialchars($row['penerangan']) ?></td>
                                 <td class="text-center">
-                                    <a href="#" 
-                                       class="btn btn-sm btn-outline-primary lihat-gambar" 
-                                       data-bs-toggle="modal" 
-                                       data-bs-target="#modalGambar" 
-                                       data-src="uploads/<?= htmlspecialchars($row['lampiran']) ?>">
-                                       Lihat Gambar
-                                    </a></td>
-                                <td><?= htmlspecialchars($row['status_tindakan']) ?></td> 
-                                <td><a href="padam_aduan.php?id=<?= $row['id_aduan'] ?>" onclick="return confirm('Adakah anda pasti ingin batalkan aduan ini?')" class="text-danger ms-2">
-        <i class="fas fa-trash-alt"></i>
-    </a>
-</td>
+                                    <?php if (!empty($row['lampiran'])): ?>
+                                        <a href="#" class="btn btn-sm btn-outline-primary lihat-gambar" data-bs-toggle="modal" data-bs-target="#modalGambar" data-src="uploads/<?= htmlspecialchars($row['lampiran']) ?>">Lihat Gambar</a>
+                                    <?php else: ?>
+                                        Tiada lampiran
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <form action="admin_aduan_status.php" method="POST">
+                                        <input type="hidden" name="id_aduan" value="<?= $row['id_aduan'] ?>">
+                                        <select name="status_tindakan" class="form-control">
+                                            <option value="Sedang Diproses" <?= $row['status_tindakan'] == 'Sedang Diproses' ? 'selected' : '' ?>>Sedang Diproses</option>
+                                            <option value="Selesai" <?= $row['status_tindakan'] == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
+                                        </select>
+                                        <button type="submit" class="btn-kemaskini mt-2">Kemaskini</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach ?>
                     <?php else: ?>
@@ -128,7 +167,7 @@ try {
         </div>
     </div>
 
-    <!-- POPUP GAMBAR -->
+    <!-- MODAL POPUP GAMBAR -->
     <div class="modal fade" id="modalGambar" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -161,3 +200,4 @@ try {
 
 </body>
 </html>
+

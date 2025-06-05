@@ -113,7 +113,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- Panggil Sidebar -->
    <?php include 'sidebar.php'; ?>
-
+ 
     <!-- Main Content -->
     <div class="content">
         <div class="container">
@@ -124,8 +124,12 @@ if (!isset($_SESSION['user_id'])) {
                     <input type="text" id="no_unit" name="no_unit" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="hubungi" class="form-label">No Tel :</label>
-                    <input type="text" id="hubungi" name="hubungi" class="form-control" required>
+                    <label for="nama_pengadu" class="form-label">Nama Pengadu :</label>
+                    <input type="text" id="nama_pengadu" name="nama_pengadu" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="no_tel" class="form-label">No Tel :</label>
+                    <input type="text" id="no_tel" name="no_tel"  maxlength="11" pattern="\d{10,11}" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="tajuk" class="form-label">Tajuk :</label>
