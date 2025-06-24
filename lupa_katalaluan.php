@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$token, $expiry, $emel]);
 
         // Hantar email reset password guna PHPMailer
-        $reset_link = "http://localhost/condocare/reset_password.php?token=" . $token;
+        $reset_link = "https://izz.aizathami.website/reset_password.php?token=" . $token;
 
         $mail = new PHPMailer(true);
         try {
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <li>Sebarang permasalahan berkaitan akaun atau akses, sila hubungi pihak pengurusan melalui emel rasmi yang disediakan.</li>
     </ul>
     <p>Sila klik pautan di bawah untuk menetapkan semula kata laluan anda:</p>
-            <p><a href='http://localhost/condocare/reset_password.php?token=$token' target='_blank' style='color: blue; text-decoration: underline;'>
+            <p><a href='https://izz.aizathami.website/reset_password.php?token=$token' target='_blank' style='color: blue; text-decoration: underline;'>
                 Reset Kata Laluan
             </a></p>
             <p>Terima kasih.</p>
