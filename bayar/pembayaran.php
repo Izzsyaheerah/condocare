@@ -8,6 +8,24 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $jumlah = $_POST['jumlah'];
+    $metode = $_POST['metode_pembayaran'];
+    $id_pelawat = $_SESSION['user_id'];
+
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare("INSERT INTO tbl_pembayaran (id_pelawat, jumlah, tarikh_pembayaran, status_pembayaran, metode_pembayaran) 
+                                VALUES (?, ?, NOW(), 'Belum Dibayar', ?)");
+        $stmt->execute([$id_pelawat, $jumlah, $metode]);
+
+        echo "<script>alert('Pembayaran berjaya dihantar!'); window.location.href='pembayaran.php';</script>";
+    } catch (PDOException $e) {
+        echo "Ralat: " . $e->getMessage();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +33,7 @@ if (!isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Aduan</title>
+    <title>Pembayaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -40,13 +58,6 @@ if (!isset($_SESSION['user_id'])) {
             justify-content: space-between;
         }
 
-        .sidebar img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin-bottom: 20px;
-        }
-
         .sidebar a {
             display: block;
             color: white;
@@ -61,23 +72,9 @@ if (!isset($_SESSION['user_id'])) {
             background-color: #D27D2C;
         }
 
-        .logout-btn {
-            background: #D27D2C;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .logout-btn:hover {
-            background: darkred;
-        }
-
         /* Main Content */
         .content {
-            margin-left: 270px;
+            margin-left: 270px; 
             padding: 20px;
             flex: 1;
             width: 100%;
@@ -93,9 +90,9 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .btn-custom {
-            background: #D27D2C;
-            color: #fff;
-            font-weight: 600;
+            background-color: #D27D2C;
+            color: white;
+            font-weight: bold;
             padding: 10px;
             width: 100%;
             border-radius: 5px;
@@ -104,7 +101,23 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .btn-custom:hover {
-            background: #A65F20;
+            background-color: #A65F20;
+        }
+
+        /* Form Customization */
+        .form-label {
+            font-weight: bold;
+        }
+
+        input, select {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
         }
 
     </style>
@@ -112,38 +125,28 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 
     <!-- Panggil Sidebar -->
-   <?php include 'sidebar.php'; ?>
- 
+    <?php include 'sidebar.php'; ?>
+
     <!-- Main Content -->
     <div class="content">
         <div class="container">
-            <h2 class="mb-3 text-center">Tambah Aduan</h2>
-            <form action="proses_aduan.php" method="post" enctype="multipart/form-data">
+            <h3 class="mb-4">Pembayaran</h3>
+            <form method="POST">
                 <div class="mb-3">
-                    <label for="no_unit" class="form-label">No Unit :</label>
-                    <input type="text" id="no_unit" name="no_unit" class="form-control" required>
+                    <label for="jumlah" class="form-label">Jumlah Pembayaran (RM):</label>
+                    <input type="number" class="form-control" name="jumlah" required>
                 </div>
+
                 <div class="mb-3">
-                    <label for="nama_pengadu" class="form-label">Nama Pengadu :</label>
-                    <input type="text" id="nama_pengadu" name="nama_pengadu" class="form-control" required>
+                    <label for="metode_pembayaran" class="form-label">Kaedah Pembayaran:</label>
+                    <select name="metode_pembayaran" class="form-control" required>
+                        <option value="Kad Kredit">Kad Kredit</option>
+                        <option value="Perbankan Dalam Talian">Perbankan Dalam Talian</option>
+                        <option value="Tunai">Tunai</option>
+                    </select>
                 </div>
-                <div class="mb-3">
-                    <label for="no_tel" class="form-label">No Tel :</label>
-                    <input type="text" id="no_tel" name="no_tel"  maxlength="11" pattern="\d{10,11}" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="tajuk" class="form-label">Tajuk :</label>
-                    <input type="text" id="tajuk" name="tajuk" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="penerangan" class="form-label">Penerangan :</label>
-                    <textarea id="penerangan" name="penerangan" class="form-control" rows="3" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="lampiran" class="form-label">Lampiran</label>
-                    <input type="file" id="lampiran" name="lampiran" class="form-control">
-                </div>
-                <button type="submit" class="btn-custom">Hantar</button>
+
+                <button type="submit" class="btn-custom">Hantar Pembayaran</button>
             </form>
         </div>
     </div>

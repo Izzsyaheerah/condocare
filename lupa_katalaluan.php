@@ -2,6 +2,8 @@
 include 'database.php';
 session_start();
 
+date_default_timezone_set('Asia/Kuala_Lumpur');
+
 // Include PHPMailer manually
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
@@ -44,34 +46,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail = new PHPMailer(true);
         try {
             // SMTP Configuration
-            // $mail->isSMTP();
-            // $mail->Host = 'smtp.gmail.com'; // Gunakan SMTP Gmail
-            // $mail->SMTPAuth = true;
-            // $mail->Username = 'a195305@siswa.ukm.edu.my'; // Gantilah dengan email anda
-            // $mail->Password = 'ya28052003'; // ✅ **Gunakan APP PASSWORD Gmail**
-            // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            // $mail->Port = 587;
-
             $mail->isSMTP();
-            $mail->Host = 'sandbox.smtp.mailtrap.io'; // Gunakan SMTP Gmail
+            $mail->Host = 'smtp.gmail.com'; // Gunakan SMTP Gmail
             $mail->SMTPAuth = true;
-            $mail->Username = 'd0b4517e9f7984'; // Gantilah dengan email anda
-            $mail->Password = '5ef5032cdf5046'; // ✅ **Gunakan APP PASSWORD Gmail**
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 2525;
+            $mail->Username = 'izzsyaheerah@gmail.com'; // Gantilah dengan email anda
+            $mail->Password = 'rmep hhvi ouxx julm'; // ✅ **Gunakan APP PASSWORD Gmail**
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+
+            // $mail->isSMTP();
+            // $mail->Host = 'sandbox.smtp.mailtrap.io'; // Gunakan SMTP Gmail
+            // $mail->SMTPAuth = true;
+            // $mail->Username = 'd0b4517e9f7984'; // Gantilah dengan email anda
+            // $mail->Password = '5ef5032cdf5046'; // ✅ **Gunakan APP PASSWORD Gmail**
+            // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            // $mail->Port = 2525;
 
             
 
             // Tetapan email
-            $mail->setFrom('a195305@siswa.ukm.edu.my', 'CondoCare Support');
+            $mail->setFrom('izzsyaheerah@gmail.com', 'CondoCare Support');
             $mail->addAddress($emel);
             $mail->isHTML(true);
-            $mail->Subject = "Reset Kata Laluan";
+            $mail->Subject = "Reset Kata Laluan CondoCare";
             $mail->Body = "
-            <p>Klik link berikut untuk reset kata laluan:</p>
+             <p>Assalamualaikum dan Salam Sejahtera,</p>
+    <p>Anda telah menerima pautan untuk menetapkan semula kata laluan bagi akaun CondoCare anda.</p>
+    <p><b>Nota Penting:</b></p>
+    <ul>
+        <li>Untuk pengguna pertama kali, anda <b>DIWAJIBKAN</b> menetapkan kata laluan baharu sebelum dapat mengakses sistem ini sepenuhnya.</li>
+        <li>Sebarang permasalahan berkaitan akaun atau akses, sila hubungi pihak pengurusan melalui emel rasmi yang disediakan.</li>
+    </ul>
+    <p>Sila klik pautan di bawah untuk menetapkan semula kata laluan anda:</p>
             <p><a href='http://localhost/condocare/reset_password.php?token=$token' target='_blank' style='color: blue; text-decoration: underline;'>
                 Reset Kata Laluan
             </a></p>
+            <p>Terima kasih.</p>
         ";
 
 
